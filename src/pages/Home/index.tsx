@@ -21,12 +21,24 @@ const newCicleFormValidationSchema = zod.object({
     .max(60, "O ciclo precisa ser de no maximo 60 minutos"),
 });
 
+//Extrai a tipagem do formulario de dentro do Schema de validação
+type NewCycleFormData = zod.infer<typeof newCicleFormValidationSchema>;
+
+// interface NewCycleFormData {
+//   task: string;
+//   minuteAmount: number;
+// }
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCicleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
   });
 
-  function handleCreateNewCycle(data: any) {
+  function handleCreateNewCycle(data: NewCycleFormData) {
     console.log(data);
   }
 
