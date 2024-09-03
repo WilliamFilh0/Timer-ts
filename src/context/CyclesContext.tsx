@@ -73,8 +73,6 @@ export function CyclesContextProvider({
 
     // Quando criar um novo ciclo, atualizar o valor de segundos passados pra 0.
     setAmountSecondsPassed(0);
-
-    // reset();
   }
 
   // Interrompe o ciclo ativo e registra a data de interrupção para ele
