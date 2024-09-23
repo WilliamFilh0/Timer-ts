@@ -1,5 +1,11 @@
 import { createContext, ReactNode, useState, useReducer } from "react";
-import { ActionTypes, Cycle, cyclesReducer } from "../reducers/cycles";
+import { Cycle, cyclesReducer } from "../reducers/cycles/reducer";
+import {
+  ActionTypes,
+  addNewCycleAction,
+  interruptCurrentCycleAction,
+  markCurrentCycleAsFinishedAction,
+} from "../reducers/cycles/actions";
 
 interface CreateCycleData {
   task: string;
@@ -7,14 +13,14 @@ interface CreateCycleData {
 }
 
 interface CyclesContentType {
-  cycles: Cycle[];
-  activeCycle: Cycle | undefined;
-  activeCycleId: string | null;
-  amountSecondsPassed: number;
-  markCurrentCycleAsFinished: () => void;
-  setSecondsPassed: (seconds: number) => void;
-  createNewCycle: (data: CreateCycleData) => void;
-  interruptCurrentCycle: () => void;
+  cycles: Cycle[]; // Lista de ciclos
+  activeCycle: Cycle | undefined; // Ciclo atualmente ativo
+  activeCycleId: string | null; // ID do ciclo ativo (ou null se não houver um)
+  amountSecondsPassed: number; // Quantidade de segundos passados no ciclo ativo
+  markCurrentCycleAsFinished: () => void; // Função para marcar o ciclo ativo como finalizado
+  setSecondsPassed: (seconds: number) => void; // Atualiza a quantidade de segundos passados
+  createNewCycle: (data: CreateCycleData) => void; // Cria um novo ciclo
+  interruptCurrentCycle: () => void; // Interrompe o ciclo ativo
 }
 
 export const CyclesContext = createContext({} as CyclesContentType);
@@ -43,12 +49,7 @@ export function CyclesContextProvider({
   }
 
   function markCurrentCycleAsFinished() {
-    dispatch({
-      type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
-      payload: {
-        activeCycleId,
-      },
-    });
+    dispatch(markCurrentCycleAsFinishedAction());
   }
 
   function createNewCycle(data: CreateCycleData) {
@@ -61,12 +62,7 @@ export function CyclesContextProvider({
       startDate: new Date(),
     };
 
-    dispatch({
-      type: ActionTypes.ADD_NEW_CYCLE,
-      payload: {
-        newCycle,
-      },
-    });
+    dispatch(addNewCycleAction(newCycle));
 
     // Quando criar um novo ciclo, atualizar o valor de segundos passados pra 0.
     setAmountSecondsPassed(0);
@@ -74,12 +70,7 @@ export function CyclesContextProvider({
 
   // Interrompe o ciclo ativo e registra a data de interrupção para ele
   function interruptCurrentCycle() {
-    dispatch({
-      type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
-      payload: {
-        activeCycleId,
-      },
-    });
+    dispatch(interruptCurrentCycleAction());
   }
 
   return (
