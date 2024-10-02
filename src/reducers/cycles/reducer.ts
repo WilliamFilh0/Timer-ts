@@ -1,4 +1,4 @@
-import { current, produce } from "immer";
+import { produce } from "immer";
 import { ActionTypes } from "./actions";
 
 export interface Cycle {
@@ -12,7 +12,7 @@ export interface Cycle {
 
 interface CyclesState {
   cycles: Cycle[];
-  activeCycleId: String | null;
+  activeCycleId: string | null;
 }
 
 export function cyclesReducer(state: CyclesState, action: any) {
